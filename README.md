@@ -1,6 +1,6 @@
 # Kevin Ngo - Fetch Assessment
 ## Code
-`notebook_draft.ipynb` is an early draft of the solutions
+`notebook_draft.ipynb` is an early draft of the solutions <br/>
 Final code for tasks may be found at `src/task_*.py`
 ### task_1.py
 You may run `python src/task_1.py` to generate sample embeddings/similarities or run `python src/task_1.py [SENTENCE_1] [SENTENCE_2] ... [SENTENCE_N]` to generate custom embeddings/similarities.
@@ -27,4 +27,4 @@ docker run -e TASK=[1|4] IMAGE_NAME
 ```
 
 ## Write-up
-The write-up for tasks is in `writeup.txt`
+The write-up for tasks is in `writeup/writeup.txt`
