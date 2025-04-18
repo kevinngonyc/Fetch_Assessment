@@ -1,0 +1,84 @@
+Task 1
+The Sentence Transformers (SBERT) Python module was used to implement a sentence 
+transformer model. The model consists of a BERT transformer, a pooling layer, 
+and a normalization layer. The pooling layer is used to aggregate the token 
+vectors produced by BERT to produce overall sentence vectors. Mean pooling is 
+used in this case. Normalization is used to ensure all outputs have the same 
+distribution, improving training performance. 
+
+One concern I had was that this may be an overly simplistic solution. The model
+is pretrained and its architecture is not deliberately designed. My rationale
+for following through with this model is that it provides good, accurate 
+embeddings and it is a solution that can be done in the recommended 2 hours. 
+Given more time, however, I would try to implement a custom model which would
+include BERT, to be implemented based on the original paper. I would try to find
+a general, comprehensive dataset which could show similarity between sentences
+or have sentence triplets (anchor, positive, negative) or some other way to 
+train a sentence transformer model. This approach would likely not provide as
+good results as SBERT, but would better demonstrate my ability to construct
+and train a model. 
+
+
+Task 2
+The main change was introducing different heads for different tasks. For Task
+B, I chose sentiment analysis. Since both tasks are classification tasks, I 
+implemented a single ClassificationHead module, parameterized on the number of
+output classes. The head consists of a single fully connected layer. The 
+reasoning behind this was to keep the model as simple as possible. Two heads 
+are included in the model, SentenceTransformerWithHeads. For the forward 
+pass, depending on whether 'A' or 'B' is specified, the model will use the 
+appropriate head.
+
+
+Task 3
+1. If the entire network was frozen, no training would be done. This would save 
+on training time and the embeddings would be accurate, but the output of the 
+heads would likely be nonsense. This might be done for evaluation purposes, when
+the model is done training.
+2. If only the transformer backbone was frozen, the embeddings would be preserved
+while the heads would be trained to perform their specific task. This should be 
+done if the transformer backbone gave accurate, generalized embeddings that 
+should not change. The advantage of this would be that a more generalized
+representation of language would be maintained in the network, leading to better
+performance between heads and between other heads if added. 
+3. If only one of the task-specific heads was frozen, then the network would act 
+as if it were a single-task network. An advantage of this approach would be that
+the model would perform better at that specific task, given that it does not have
+to split training across two different tasks. After training, this may be done 
+if one of the heads is underperforming compared to the other. 
+
+1. To choose a pre-trained model, first we would need to look at the type of
+problem. For NLP tasks we would choose an NLP model. For image classification
+tasks we would choose a vision model. Then, we might look for tasks that solve
+similar problems. Often these will be more generalized models like BERT or GPT-4
+modelling overall language to be used for a more specific task like translation.
+Another factor to keep in mind is model complexity. Depending on the complexity
+of the task and the computing power, one might want to use an appropriately 
+complex model. 
+2. For freezing/unfreezing layers, I would freeze earlier layers and unfreeze
+later layers if transferring from a more general problem to a more specific 
+problem. One could test the efficacy of freezing by subsequently unfreezing 
+layer by layer, testing against a validation set each time to see at which point
+does freezing give the best performance. 
+3. You should choose similar models for similar problems because the information
+encoded in the model should theoretically carry over the more overlap there is 
+between the two domains. As for complexity, a more complex model would be better
+suited for a more complex problem because it will be able to more precisely 
+encapsulate any particular nuances. 
+  With regard to freezing earlier layers, the rationale behind this is to preserve
+more general information. The early layers in a model often encapsulate broader
+features and thus freezing them would maintain knowledge of said features. 
+
+
+Task 4
+For this task I used two datasets: AG News and Twitter Financial News Sentiment.
+AG News was used for Task A, classifying text into 4 classes: World, Sports, 
+Business, Sci/Tech. Twitter Financial News Sentiment was used for Task B, 
+analyzing sentiment using 3 classes: Bearish, Bullish, and Neutral. The two 
+datasets were zipped together and iterated through at the same time during 
+training. For the forward pass, the data from Dataset A was passed through
+the model using the Task A head. Subsequently, the data from Dataset B was
+passed through the model using the Task B head. The losses for both were
+calculated and summed together. For metrics, I decided to include accuracy,
+f1-score, precision, and recall. I believe that this would provide a well-
+rounded look at the performance of the model. 
